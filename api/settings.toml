@@ -1,0 +1,9 @@
+USER_DB = "alanp"
+PASS_DB = "12345"
+URL_DB = "localhost"
+NAME_DB = "clase_login"
+FULL_URL_DB = "postgresql://{USER_DB}:{PASS_DB}@{URL_DB}/{NAME_DB}"
+SQLALCHEMY_DATABASE_URI = "postgresql://{USER_DB}:{PASS_DB}@{URL_DB}/{NAME_DB}"
+DEBUG = false
+BCRYPT_LOG_ROUNDS = 13
+SQLALCHEMY_TRACK_MODIFICATIONS = false
