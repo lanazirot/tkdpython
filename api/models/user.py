@@ -4,11 +4,21 @@ import jwt
 from database import db
 from encrypt import bcrypt
 from dbconfig import DBConfig
-from models.roles import Roles
-
-
+from dataclasses import dataclass
+@dataclass
 class User(db.Model):
     __tablename__ = "users"
+    
+    id: int
+    uuid: str
+    name: str
+    email: str
+    password: str
+    admin: bool
+    registered_on: datetime.datetime
+    updated_at: datetime.datetime
+    role: str
+    
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     uuid = db.Column(db.String(255), nullable=False, unique=True)
     name = db.Column(db.String(100), nullable=False)
@@ -19,7 +29,7 @@ class User(db.Model):
         db.DateTime, nullable=False, default=datetime.datetime.utcnow())
     updated_at = db.Column(
         db.DateTime, default=datetime.datetime.utcnow(), onupdate=datetime.datetime.utcnow())
-    role = db.Column(db.Enum(Roles, values_callable=lambda obj: [e.value for e in obj]), nullable=True)
+    role = db.Column(db.String(50), nullable=False, default='NA')
 
     def __init__(self, name, email, password, admin=False) -> None:
         self.email = email

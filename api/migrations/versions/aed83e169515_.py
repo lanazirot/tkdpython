@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 6b7f59c6b994
+Revision ID: aed83e169515
 Revises: 
-Create Date: 2022-11-20 15:34:57.059289
+Create Date: 2022-11-20 15:54:16.002112
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '6b7f59c6b994'
+revision = 'aed83e169515'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,7 +27,7 @@ def upgrade():
     sa.Column('admin', sa.Boolean(), nullable=False),
     sa.Column('registered_on', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.Column('role', sa.Enum('Alumno', 'Profesor', 'Administrativo', 'Juez', name='roles'), nullable=True),
+    sa.Column('role', sa.String(length=50), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('uuid')
@@ -35,7 +35,7 @@ def upgrade():
     op.create_table('professors',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('user_uuid', sa.String(length=255), nullable=True),
-    sa.Column('belt_color', sa.Enum('Blanca', 'Amarilla', 'Naranja', 'Verde', 'Azul', 'Roja', 'Negra', name='belt'), server_default='Negra', nullable=True),
+    sa.Column('belt_color', sa.String(length=50), nullable=False),
     sa.Column('age', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_uuid'], ['users.uuid'], ),
     sa.PrimaryKeyConstraint('id')
@@ -43,7 +43,7 @@ def upgrade():
     op.create_table('students',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('user_uuid', sa.String(length=255), nullable=True),
-    sa.Column('belt_color', sa.Enum('Blanca', 'Amarilla', 'Naranja', 'Verde', 'Azul', 'Roja', 'Negra', name='belt'), server_default='Blanca', nullable=True),
+    sa.Column('belt_color', sa.String(length=50), nullable=False),
     sa.Column('age', sa.Integer(), nullable=False),
     sa.Column('birth_date', sa.DateTime(), nullable=False),
     sa.Column('weight', sa.Float(), nullable=False),

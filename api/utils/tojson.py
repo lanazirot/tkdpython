@@ -1,5 +1,5 @@
 import json
-def to_json(inst, cls):
+def tojson(inst, cls):
     convert = dict()
     d = dict()
     for c in cls.__table__.columns:

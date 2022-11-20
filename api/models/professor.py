@@ -1,20 +1,28 @@
 from database import db 
-from models.belts import Belt
-from utils import tojson
 from models.student import Student
-
+from models.user import User
+from dataclasses import dataclass
+from typing import List
+@dataclass
 class Professor(db.Model):
     __tablename__ = "professors"
+    
+    id: int
+    user_uuid: str
+    belt_color: str
+    age: int
+    userModel: User
+    
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_uuid = db.Column(db.String(255), db.ForeignKey('users.uuid'))
-    belt_color = db.Column(db.Enum(Belt, values_callable=lambda obj: [e.value for e in obj]), default=Belt.BLACK.value, server_default=Belt.BLACK.value)
+    belt_color = db.Column(db.String(50), nullable=False)
     age = db.Column(db.Integer, nullable=False)
-    students = db.relationship("Student", backref='student', cascade="all,delete", lazy="dynamic")
     
-    def __init__(self, age, uuid) -> None:
+    students = db.relationship("Student", backref='student', cascade="all,delete", lazy="dynamic")
+    userModel = db.relationship("User", backref='user_professor', cascade="all,delete")
+    
+    def __init__(self, age, uuid, belt) -> None:
         self.age = age
         self.user_uuid = uuid
+        self.belt_color = belt
     
-    @property
-    def json(self):
-        return tojson(self, self.__class__)

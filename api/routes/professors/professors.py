@@ -10,17 +10,17 @@ professorsapp = Blueprint('professors', __name__, template_folder='templates')
 @authentication
 def get_professors(current_user):
     professors = Professor.query.all()
-    return make_response(jsonify({'data': [professor.json for professor in professors]}, 200))
+    return jsonify({'data': professors}), 200
 
 # Route to create a new professor
 @professorsapp.route('/professors/add', methods=['POST'])
 @authentication
 def create_professor(current_user):
     data = request.get_json()
-    professor = Professor(age=data['age'], uuid=data['user_uuid'])
+    professor = Professor(age=data['age'], uuid=data['user_uuid'], belt=data['belt_color'])
     db.session.add(professor)
     db.session.commit()
-    return make_response(jsonify({'data': professor.json}, 200))
+    return make_response(jsonify({'data': professor}, 200))
 
 # Route to delete a professor
 @professorsapp.route('/professors/<int:id>', methods=['DELETE'])
@@ -46,4 +46,4 @@ def update_professor(current_user, id):
     professor.belt = data['belt']
     professor.age = data['age']
     db.session.commit()
-    return make_response(jsonify({'data': professor.json}, 200))
+    return make_response(jsonify({'data': professor}, 200))
