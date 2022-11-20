@@ -34,11 +34,10 @@ def authentication(f):
 
 def admin_role(f):
     @wraps(f)
-    # Check if current user is admin
     def decorator(*args, **kwargs):
-        data = jwt.decode(session['token'], settings.SECRET_KEY, algorithms=["HS256"])
+        data = jwt.decode(session['token'], settings.token, algorithms=["HS256"])
         current_user = User.query.filter_by(uuid=data['uuid']).first()
         if not current_user.admin:
             return make_response(jsonify({'message': 'Admin role required'}), 400)
-        return f(current_user, *args, **kwargs)
+        return f(*args, **kwargs)
     return decorator

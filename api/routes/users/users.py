@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify, make_response, session
 from models.user import User
 from app import db
 
@@ -16,6 +16,7 @@ def login():
         if user.auth(authUser.password):
             # Generate a token
             token = user.generate_token(user.uuid)
+            session['token'] = token
             return make_response(jsonify({'token': token, 'logged_in': True}), 200)
     return make_response('Could not verify login', 401, {'WWW-Authenticate': 'Basic realm="Failed login"'})
 

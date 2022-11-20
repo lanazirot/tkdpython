@@ -19,9 +19,6 @@ logger = logging.getLogger('alembic.env')
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
-from models.professor import Professor
-from models.student import Student
-from models.user import User
 from models.personal import Personal
 from models.judge import Judge
 # target_metadata = mymodel.Base.metadata

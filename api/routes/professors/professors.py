@@ -13,12 +13,11 @@ def get_professors(current_user):
     return make_response(jsonify({'data': [professor.json for professor in professors]}, 200))
 
 # Route to create a new professor
-@professorsapp.route('/professors', methods=['POST'])
+@professorsapp.route('/professors/add', methods=['POST'])
 @authentication
-@admin_role
-def create_professor():
+def create_professor(current_user):
     data = request.get_json()
-    professor = Professor(data['belt'], data['age'])
+    professor = Professor(age=data['age'], uuid=data['user_uuid'])
     db.session.add(professor)
     db.session.commit()
     return make_response(jsonify({'data': professor.json}, 200))
@@ -27,7 +26,7 @@ def create_professor():
 @professorsapp.route('/professors/<int:id>', methods=['DELETE'])
 @authentication
 @admin_role
-def delete_professor(id):
+def delete_professor(current_user, id):
     professor = Professor.query.get(id)
     if not professor:
         return make_response(jsonify({'message': 'Professor not found'}), 404)
@@ -39,7 +38,7 @@ def delete_professor(id):
 @professorsapp.route('/professors/<int:id>', methods=['PUT'])
 @authentication
 @admin_role
-def update_professor(id):
+def update_professor(current_user, id):
     professor = Professor.query.get(id)
     if not professor:
         return make_response(jsonify({'message': 'Professor not found'}), 404)

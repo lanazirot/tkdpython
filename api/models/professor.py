@@ -6,14 +6,14 @@ from models.student import Student
 class Professor(db.Model):
     __tablename__ = "professors"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_uuid = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_uuid = db.Column(db.String(255), db.ForeignKey('users.uuid'))
     belt_color = db.Column(db.Enum(Belt, values_callable=lambda obj: [e.value for e in obj]), default=Belt.BLACK.value, server_default=Belt.BLACK.value)
     age = db.Column(db.Integer, nullable=False)
     students = db.relationship("Student", backref='student', cascade="all,delete", lazy="dynamic")
     
-    def __init__(self, belt, age) -> None:
+    def __init__(self, age, uuid) -> None:
         self.age = age
-        self.belt = belt
+        self.user_uuid = uuid
     
     @property
     def json(self):
