@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import request, jsonify, make_response
+from flask import request, jsonify, make_response, session
 from models.user import User
 import jwt
 from config import settings
@@ -20,5 +20,18 @@ def authentication(f):
                 return make_response(jsonify({'message': 'User not found'}), 400)
         except:
             return make_response(jsonify({'message': 'Invalid token'}), 400)
+        return f(current_user, *args, **kwargs)
+    return decorator
+
+
+
+def admin_role(f):
+    @wraps(f)
+    # Check if current user is admin
+    def decorator(*args, **kwargs):
+        data = jwt.decode(session['token'], settings.SECRET_KEY, algorithms=["HS256"])
+        current_user = User.query.filter_by(uuid=data['uuid']).first()
+        if not current_user.admin:
+            return make_response(jsonify({'message': 'Admin role required'}), 400)
         return f(current_user, *args, **kwargs)
     return decorator
