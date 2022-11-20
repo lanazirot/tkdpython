@@ -8,7 +8,7 @@ professorsapp = Blueprint('professors', __name__, template_folder='templates')
 # Route to list all professors
 @professorsapp.route('/professors', methods=['GET'])
 @authentication
-def get_professors():
+def get_professors(current_user):
     professors = Professor.query.all()
     return make_response(jsonify({'data': [professor.json for professor in professors]}, 200))
 

@@ -9,23 +9,22 @@ usersapp = Blueprint('users', __name__, template_folder='templates')
 def login():
     authUser = request.authorization
     if not authUser or not authUser.username or not authUser.password:
-        return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
-    user : User = User.query.filter_by(username=authUser.username).first()
+        return make_response('Auth must be provided to login', 401, {'WWW-Authenticate': 'Basic realm="Basic auth required"'})
+    user : User = User.query.filter_by(email=authUser.username).first()
     if user:
         # Check if the password is correct
         if user.auth(authUser.password):
             # Generate a token
-            token = user.generate_token()
-            db.session['token'] = token
+            token = user.generate_token(user.uuid)
             return make_response(jsonify({'token': token, 'logged_in': True}), 200)
-    return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
+    return make_response('Could not verify login', 401, {'WWW-Authenticate': 'Basic realm="Failed login"'})
 
 @usersapp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
     user = User.query.filter_by(email=data['email']).first()
     if not user:
-        newUser = User(data['name'], data['email'], data['password'])
+        newUser = User(name=data['name'], email=data['email'], password=data['password'])
         try:
             db.session.add(newUser)
             db.session.commit()

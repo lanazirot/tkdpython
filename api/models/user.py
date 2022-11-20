@@ -1,26 +1,25 @@
+import uuid
+import datetime
+import jwt
 from database import db
-from datetime import datetime
 from encrypt import bcrypt
 from dbconfig import DBConfig
-import uuid
 from models.roles import Roles
-import jwt
 
 
 class User(db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    uuid = db.Column(db.Integer, nullable=False)
+    uuid = db.Column(db.String(255), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(255), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
     registered_on = db.Column(
-        db.DateTime, nullable=False, default=datetime.now)
+        db.DateTime, nullable=False, default=datetime.datetime.utcnow())
     updated_at = db.Column(
-        db.DateTime, default=datetime.now, onupdate=datetime.now)
-    role = db.Column(db.Enum(Roles, values_callable=lambda obj: [
-                     e.value for e in obj]), nullable=True)
+        db.DateTime, default=datetime.datetime.utcnow(), onupdate=datetime.datetime.utcnow())
+    role = db.Column(db.Enum(Roles, values_callable=lambda obj: [e.value for e in obj]), nullable=True)
 
     def __init__(self, name, email, password, admin=False) -> None:
         self.email = email
@@ -33,5 +32,5 @@ class User(db.Model):
     def auth(self, password):
         return bcrypt.check_password_hash(self.password, password)
 
-    def generate_token(uuid):
-        return jwt.encode({'uuid': uuid, 'exp': datetime.utcnow() + datetime.timedelta(days=0, minutes=30, hours=1), 'iat': datetime.utcnow()}, DBConfig.SECRET_KEY, algorithm='HS256')
+    def generate_token(self,uuid):
+        return jwt.encode({'uuid': uuid, 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, minutes=30, hours=1), 'iat': datetime.datetime.utcnow()}, DBConfig.SECRET_KEY, algorithm='HS256')

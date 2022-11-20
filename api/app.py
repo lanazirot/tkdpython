@@ -6,11 +6,12 @@ from encrypt import bcrypt
 from database import db
 from flask_migrate import Migrate
 from routes.users.users import usersapp
-
+from routes.professors.professors import professorsapp
 
 app = Flask(__name__)
 app.config.from_object(DBConfig)
 app.register_blueprint(usersapp)
+app.register_blueprint(professorsapp)
 CORS(app)
 FlaskDynaconf(app, settings_files=["settings.toml"])
 bcrypt.init_app(app)

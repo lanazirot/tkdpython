@@ -14,12 +14,19 @@ def authentication(f):
         if not token:
             return make_response(jsonify({'message': 'Token missing'}), 400)
         try:
-            data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            data = jwt.decode(token, settings.token, algorithms=["HS256"])
             current_user = User.query.filter_by(uuid=data['uuid']).first()
             if not current_user:
                 return make_response(jsonify({'message': 'User not found'}), 400)
-        except:
+        except jwt.ExpiredSignatureError as es:
+            print(es)
+            return make_response(jsonify({'message': 'Expired token'}), 400)
+        except jwt.InvalidTokenError as it:
+            print(it)
             return make_response(jsonify({'message': 'Invalid token'}), 400)
+        except Exception as ex:
+            print(ex)
+            return make_response(jsonify({'message': 'Internal server error'}), 500)
         return f(current_user, *args, **kwargs)
     return decorator
 
