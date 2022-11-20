@@ -15,7 +15,7 @@ class User(db.Model):
    admin = db.Column(db.Boolean, nullable=False, default=False)
    registered_on = db.Column(db.DateTime, nullable=False, default=datetime.now)
    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
-   role = db.Column(db.Enum(Roles, values_callable= lambda obj: [e.value for e in obj]), nullable=False, default=Roles.ALUMNO.value, server_default=Roles.ALUMNO.value)
+   role = db.Column(db.Enum(Roles, values_callable= lambda obj: [e.value for e in obj]), nullable=True)
    
    def __init__(self, name, email, password, admin=False) -> None:
       self.email = email

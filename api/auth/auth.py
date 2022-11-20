@@ -5,10 +5,7 @@ import jwt
 from config import settings
 
 
-def token_required(f):
-    """
-    Funcion que confirma que el usuario tiene el token activo
-    """
+def authentication(f):
     @wraps(f)
     def decorator(*args, **kwargs):
         token = None
