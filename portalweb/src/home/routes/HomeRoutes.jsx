@@ -5,6 +5,7 @@ import { ProfessorsPage } from '../../professors/pages/ProfessorsPage';
 import { PersonalPage } from '../../personal/pages/PersonalPage';
 import { StudentsPage } from '../../students/pages/StudentsPage';
 import { HomePage } from '../pages/HomePage';
+import { AccountPage } from '../../account/pages/AccountPage';
 
 import { NavbarApp } from '../../ui';
 
@@ -37,6 +38,7 @@ export const HomeRoutes = () => {
                 {/* Search student by ID  */}
                 <Route path="students/:studentId" element={<StudentsPage />} />
                 
+                <Route path="account" element={<AccountPage />} />
 
                 <Route path="/" element={<Navigate to="/home" />} />
                 <Route path="*" element={<Navigate to="/home" />} />
