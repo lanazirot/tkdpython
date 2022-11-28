@@ -67,7 +67,7 @@ export const LoginPage = () => {
             wrapperClass="mb-4"
             label="Email address"
             required
-            id="formControlLg"
+            id="email"
             onChange={(e) =>
               setForm({ ...formLogin, email: e.target.value })
             }
@@ -77,7 +77,7 @@ export const LoginPage = () => {
           <MDBInput
             wrapperClass="mb-4"
             label="Password"
-            id="formControlLg"
+            id="password"
             onChange={(e) =>
               setForm({ ...formLogin, password: e.target.value })
             }

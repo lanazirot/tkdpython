@@ -1,10 +1,8 @@
-import axios from "axios";
-import API_URL from "../constants";
+import axiosInstance from "../axios";
 
 const login = async (email, password) => {
-  //Post request to the API to login with Basic Auth and get the token
-  const response = await axios.post(
-    `${API_URL}/login`,
+  const response = await axiosInstance.post(
+    `/login`,
     {},
     {
       auth: {
@@ -13,8 +11,8 @@ const login = async (email, password) => {
       },
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*"
-      }
+        "Access-Control-Allow-Origin": "*",
+      },
     }
   );
 
