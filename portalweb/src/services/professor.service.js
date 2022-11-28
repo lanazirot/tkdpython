@@ -20,13 +20,22 @@ const deleteProfesor = async (id) => {
     return response.data;
 }
 
+const fetchProfessors = async () => {
+    const response = await axiosInstance.get('/professors');
+    return response.data;
+}
+
+
 
 
 
 
 const professorService = { 
     getProfesorByID,
-    createProfesor
+    createProfesor,
+    updateProfesor, 
+    deleteProfesor,
+    fetchProfessors
 };
 
 export default professorService;

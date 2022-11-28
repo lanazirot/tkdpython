@@ -1,12 +1,14 @@
 import React from 'react'
 import { MDBCard, MDBCardImage, MDBCardBody, MDBCardTitle, MDBCardText, MDBCol } from 'mdb-react-ui-kit';
+import { useNavigate } from "react-router-dom";
 import './styles.css'
 
 export const Professor = ({item}) => {
-
+  const navigate = useNavigate();
   //Handle event to navigate and edit professor
   const handleEdit = () => {
-    console.log(item);
+    //Navigate to ProfessorDetailPage and pass item as parameter
+    navigate(`/professors/${item.id}`);
   }
 
   return (
