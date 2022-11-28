@@ -1,10 +1,8 @@
-import { useContext } from "react";
 import { Navigate } from "react-router-dom";
-
-import { AuthContext } from "../auth";
+import { useSelector } from "react-redux";
 
 export const PublicRoute = ({ children }) => {
-  const { logged } = useContext(AuthContext);
+  const { isLoggedIn } = useSelector((state) => state.auth);
 
-  return !logged ? children : <Navigate to="/home" />;
+  return !isLoggedIn ? children : <Navigate to="/home" />;
 };

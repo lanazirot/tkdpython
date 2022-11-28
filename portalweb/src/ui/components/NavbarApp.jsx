@@ -1,46 +1,68 @@
-import { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../auth/context/AuthContext";
-import {Nav, Navbar, Container} from 'react-bootstrap'
+import { useState } from 'react';
+import { Link, useNavigate, Navigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { TbLogout } from "react-icons/tb";
 import "./styles.css";
+import { logout } from "../../slices";
+import { MDBNavbar, MDBContainer, MDBNavbarBrand,MDBIcon, MDBNavbarNav, MDBNavbarItem, MDBNavbarLink, MDBNavbarToggler,MDBCollapse, MDBBtn } from "mdb-react-ui-kit";
 
 export const NavbarApp = () => {
-  const { user, logout } = useContext(AuthContext);
 
+  const [showNavText, setShowNavText] = useState(false);
+
+
+  const { user: currentUser } = useSelector((state) => state.auth);
+
+  if (!currentUser) {
+    return <Navigate to="/login" />;
+  }
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onLogout = () => {
-    logout();
-    navigate("/login", {
-      replace: true,
-    });
+  const logoutApp = () => {
+    dispatch(logout());
+    navigate("/login");
   };
 
   return (
-    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-    <Container>
-      <Navbar.Brand>
+    <MDBNavbar expand="lg" dark bgColor="primary">
+      <MDBContainer fluid>
+        <MDBNavbarBrand tag={Link} to='/home'>
         <img src="/favicon.svg" alt="" width="30" height="24"/>
         Taekwondo App
-      </Navbar.Brand>
-      <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-      <Navbar.Collapse id="responsive-navbar-nav">
-        <Nav className="me-auto">
-          <Nav.Link as={Link} to='/home'>Home</Nav.Link>
-          <Nav.Link as={Link} to='/students'>Students</Nav.Link>
-          <Nav.Link as={Link} to='/professors'>Professors</Nav.Link>
-          <Nav.Link as={Link} to='/judges'>Judges</Nav.Link>
-          <Nav.Link as={Link} to='/personal'>Personal</Nav.Link>
-        </Nav>
-        <Nav>
-          <Nav.Link as={Link} to='/account'>{user.name}</Nav.Link>
-          <Nav.Link onClick={logout}>
-            Salir <TbLogout/>
-          </Nav.Link>
-        </Nav>
-      </Navbar.Collapse>
-    </Container>
-  </Navbar>
+        </MDBNavbarBrand>
+        <MDBNavbarToggler
+          type="button"
+          data-target="#navbarText"
+          aria-controls="navbarText"
+          aria-expanded="false"
+          aria-label="Abrir o cerrar menu"
+          onClick={() => setShowNavText(!showNavText)}
+        >
+        <MDBIcon icon="bars" fas />
+        </MDBNavbarToggler>
+        <MDBCollapse navbar show={showNavText}>
+          <MDBNavbarNav className="mr-auto mb-2 mb-lg-0">
+            <MDBNavbarItem>
+              <MDBNavbarLink tag={Link} to='home'>Home</MDBNavbarLink>
+            </MDBNavbarItem>
+            <MDBNavbarItem>
+              <MDBNavbarLink tag={Link} to='students'>Students</MDBNavbarLink>
+            </MDBNavbarItem>
+            <MDBNavbarItem>
+              <MDBNavbarLink tag={Link} to='professors'>Professors</MDBNavbarLink>
+            </MDBNavbarItem>
+            <MDBNavbarItem>
+              <MDBNavbarLink tag={Link} to='jugdes'>Jugdes</MDBNavbarLink>
+            </MDBNavbarItem>
+            <MDBNavbarItem>
+              <MDBNavbarLink tag={Link} to='personal'>Personal</MDBNavbarLink>
+            </MDBNavbarItem>
+          </MDBNavbarNav>
+          <MDBBtn color='primary' onClick={logoutApp}><TbLogout size={20}/></MDBBtn>
+        </MDBCollapse>
+      </MDBContainer>
+    </MDBNavbar>
   );
 };

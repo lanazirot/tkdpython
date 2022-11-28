@@ -1,10 +1,10 @@
-import { AuthProvider } from './auth';
 import { AppRouter } from './router/AppRouter';
-
+import store from "./store";
+import { Provider } from "react-redux";
 export const TaekwondoApp = () => {
   return (
-    <AuthProvider>
+    <Provider store={store}>
         <AppRouter />
-    </AuthProvider>
-  )
+    </Provider>
+  );
 }
