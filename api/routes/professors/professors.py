@@ -12,6 +12,15 @@ def get_professors(current_user):
     professors = Professor.query.all()
     return jsonify({'data': professors}), 200
 
+# Route to get details of a professor
+@professorsapp.route('/professors/<int:id>', methods=['GET'])
+@authentication
+def get_professor(current_user, id):
+    professor = Professor.query.get(id)
+    if professor:
+        return jsonify({'data': professor}), 200
+    return jsonify({'message': 'Professor not found'}), 404
+
 # Route to create a new professor
 @professorsapp.route('/professors/add', methods=['POST'])
 @authentication
@@ -43,7 +52,10 @@ def update_professor(current_user, id):
     if not professor:
         return make_response(jsonify({'message': 'Professor not found'}), 404)
     data = request.get_json()
-    professor.belt = data['belt']
+    print(data)
+    professor.belt = data['belt_color']
     professor.age = data['age']
+    professor.userModel.email = data['userModel']['email']
+    professor.userModel.name = data['userModel']['name']
     db.session.commit()
     return make_response(jsonify({'data': professor}, 200))

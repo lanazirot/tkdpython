@@ -26,7 +26,7 @@ export const NavbarApp = () => {
   };
 
   return (
-    <MDBNavbar expand="lg" dark bgColor="primary">
+    <MDBNavbar expand="lg" fixed='top' dark bgColor="primary">
       <MDBContainer fluid>
         <MDBNavbarBrand tag={Link} to='/home'>
         <img src="/favicon.svg" alt="" width="30" height="24"/>

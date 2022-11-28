@@ -14,12 +14,12 @@ class Professor(db.Model):
     userModel: User
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_uuid = db.Column(db.String(255), db.ForeignKey('users.uuid'))
+    user_uuid = db.Column(db.String(255), db.ForeignKey('users.uuid', ondelete='CASCADE'))
     belt_color = db.Column(db.String(50), nullable=False)
     age = db.Column(db.Integer, nullable=False)
     
     students = db.relationship("Student", backref='student', cascade="all,delete", lazy="dynamic")
-    userModel = db.relationship("User", backref='user_professor', cascade="all,delete")
+    userModel = db.relationship("User", backref='user_professor', cascade="all,delete", passive_deletes=True)
     
     def __init__(self, age, uuid, belt) -> None:
         self.age = age

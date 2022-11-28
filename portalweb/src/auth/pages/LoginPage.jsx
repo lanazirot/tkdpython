@@ -35,7 +35,8 @@ export const LoginPage = () => {
     dispatch(login({ email, password }))
       .unwrap()
       .then(() => {
-        navigate("/home");
+        const url = localStorage.getItem("lastPath") || "/home";
+        navigate(url);
         window.location.reload();
       })
       .catch(() => {

@@ -40,6 +40,7 @@ export const updateProfessor = (professor) => {
             const response = await professorService.updateProfesor(professor);
             dispatch(updateProfessorSuccess(response.data));
         } catch (error) {
+            console.log(error);
             const message = error.response.data || "Unknown error";
             dispatch(setMessage(message));
         }
@@ -53,6 +54,7 @@ export const deleteProfessor = (id) => {
             const response = await professorService.deleteProfesor(id);
             dispatch(deleteProfessorSuccess(response.data));
         } catch (error) {
+
             const message = error.response.data || "Unknown error";
             dispatch(setMessage(message));
         }
@@ -118,17 +120,12 @@ const professorsSlice = createSlice({
         updateProfessorSuccess: (state, {
             payload
         }) => {
-            const index = state.professors.findIndex(professor => professor.id === payload.id);
-            if (index !== -1) {
-                state.professors[index] = payload;
-            }
             state.loading = false;
             state.hasErrors = false;
         },
         deleteProfessorSuccess: (state, {
             payload
         }) => {
-            state.professors = state.professors.filter(professor => professor.id !== payload.id);
             state.loading = false;
             state.hasErrors = false;
         }

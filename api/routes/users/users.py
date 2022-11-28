@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, session
 from models.user import User
 from app import db
+from auth.auth import authentication, admin_role
 
 usersapp = Blueprint('users', __name__, template_folder='templates')
 
@@ -33,4 +34,14 @@ def register():
         except Exception as e:
             return make_response(jsonify({'message': 'An error occurred while creating the user'}), 500)
     return make_response(jsonify({'message': 'User already exists'}), 409)        
-        
+
+@usersapp.route('/deleteUser', methods=['GET'])
+@authentication
+@admin_role
+def delete_user(current_user, id):
+    user = User.query.get(id)
+    if not user:
+        return make_response(jsonify({'message': 'User not found'}), 404)
+    db.session.delete(user)
+    db.session.commit()
+    return make_response(jsonify({'message': 'User deleted'}), 200)
