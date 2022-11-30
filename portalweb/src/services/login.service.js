@@ -39,9 +39,9 @@ const register = async (name, email, password, img_url) => {
     }
   );
   if(response.data.token){
-    localStorage.setItem("user", JSON.stringify(response.data.token));
+    localStorage.setItem("user", JSON.stringify(response.data));
   }
-  return response.data.token;
+  return response.data;
 }
 
 const logout = () => {

@@ -48,7 +48,7 @@ def register():
             db.session.commit()
             # Generate a token
             token = newUser.generate_token(newUser.uuid)
-            return make_response(jsonify({'message': 'User created successfully', 'token': token}), 201)
+            return make_response(jsonify({'logged_in': True, 'token': token}), 201)
         except Exception as e:
             return make_response(jsonify({'message': 'An error occurred while creating the user'}), 500)
     return make_response(jsonify({'message': 'User already exists'}), 409)        

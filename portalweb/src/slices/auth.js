@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { setMessage } from "./messages";
+import { setLoading } from "./loading";
+
 
 import authService from "../services/login.service";
 
@@ -23,10 +25,13 @@ export const register = createAsyncThunk(
   "auth/register",
   async ({ name, email, password, img_url }, thunkAPI) => {
     try {
+      thunkAPI.dispatch(setLoading(true));
       const data = await authService.register(name, email, password, img_url);
       console.log(data);
-      return { user: data };
+      thunkAPI.dispatch(setLoading(false));
+      return {user: data};
     } catch (error) {
+      thunkAPI.dispatch(setLoading(false));
       const message = error.response.data || "Unknown error";
       thunkAPI.dispatch(setMessage(message));
       return thunkAPI.rejectWithValue();
@@ -60,6 +65,7 @@ const authSlice = createSlice({
     },
     [register.fulfilled]: (state, action) => {
       state.isLoggedIn = true;
+      state.user = action.payload.user
     },
     [register.rejected]: (state, action) => {
       state.isLoggedIn = false;

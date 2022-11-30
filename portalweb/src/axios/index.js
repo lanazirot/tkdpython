@@ -3,6 +3,8 @@ import API_URL from "../constants";
 
 //Check if the user is authenticated
 const isAuth = localStorage.hasOwnProperty('user') && JSON.parse(localStorage.getItem('user')).token !== null;
+console.log(isAuth);
+console.log(JSON.parse(localStorage.getItem('user')) || null);
 
 export const axiosInstance = axios.create({
   baseURL: API_URL,

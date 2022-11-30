@@ -11,12 +11,6 @@ export const NavbarApp = () => {
   const [showNavText, setShowNavText] = useState(false);
 
 
-  const { user: currentUser } = useSelector((state) => state.auth);
-
-  if (!currentUser) {
-    return <Navigate to="/login" />;
-  }
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

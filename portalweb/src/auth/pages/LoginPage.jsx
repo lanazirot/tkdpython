@@ -16,24 +16,16 @@ import { Footer } from "../../ui/components/Footer";
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
   const { message } = useSelector((state) => state.message);
-
   const dispatch = useDispatch();
-
   //Create a state for the form
   const [formLogin, setForm] = useState({ email: "", password: "" });
 
-  useEffect(() => {
-    dispatch(clearMessage());
-  }, [dispatch]);
-
+  
   const handleLogin = () => {
     const { email, password } = formLogin;
     setLoading(true);
-
     dispatch(clearMessage());
-
     dispatch(login({ email, password }))
       .unwrap()
       .then(() => {
