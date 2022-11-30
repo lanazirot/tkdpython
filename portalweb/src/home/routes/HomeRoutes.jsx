@@ -5,14 +5,11 @@ import { PersonalPage } from '../../personal/pages/PersonalPage';
 import { StudentsPage } from '../../students/pages/StudentsPage';
 import { HomePage } from '../pages/HomePage';
 import { AccountPage } from '../../account/pages/AccountPage';
-
 import { AccountRouter } from '../../account/routes/AccountRouter';
 import { ProfessorsRouter } from '../../professors/routes/ProfessorsRouter';
-
 import { NavbarApp } from '../../ui';
-
-
-
+import { Error404Page } from '../../ui/components/Error404Page';
+import { AdminRoute } from '../../router/AdminRoute';
 export const AppRoutes = () => {
   return (
     <>
@@ -21,13 +18,21 @@ export const AppRoutes = () => {
             <Routes>
                 <Route path="home" element={<HomePage />} />
                 <Route path="jugdes" element={<JugdesPage />} />
-                <Route path="professors/*" element={<ProfessorsRouter />} />
+                <Route path="professors/*" element={
+                    <AdminRoute>
+                        <ProfessorsRouter />
+                    </AdminRoute>
+                } />
                 <Route path="account/*" element={<AccountRouter />} />
                 <Route path="personal" element={<PersonalPage />} />
-                <Route path="students" element={<StudentsPage />} />
+                <Route path="students" element={
+                    <AdminRoute>
+                        <StudentsPage />
+                    </AdminRoute>
+                } />
                 <Route path="account" element={<AccountPage />} />
                 <Route path="/" element={<Navigate to="/home" />} />
-                <Route path="*" element={<Navigate to="/home" />} />
+                <Route path="*" element={<Error404Page/>} />
             </Routes>
         </div>
     </>

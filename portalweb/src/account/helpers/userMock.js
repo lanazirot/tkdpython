@@ -7,3 +7,4 @@ export const userSchema = yup.object().shape({
     img_url: yup.string().default('assets/img/Profile.svg'),
 });
 
+

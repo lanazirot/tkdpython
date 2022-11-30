@@ -24,7 +24,6 @@ export const NavbarApp = () => {
     navigate("/login");
   };
 
-  console.log(usuario);
 
   return (
     <MDBNavbar expand="lg" fixed='top' dark bgColor="primary">
@@ -48,13 +47,13 @@ export const NavbarApp = () => {
             <MDBNavbarItem>
               <MDBNavbarLink tag={Link} to='home'>Home</MDBNavbarLink>
             </MDBNavbarItem>
-            <MDBNavbarItem>
+            <MDBNavbarItem style={{display: usuario.user.admin ? 'block' : 'none'}}>
               <MDBNavbarLink tag={Link} to='students'>Students</MDBNavbarLink>
             </MDBNavbarItem>
-            <MDBNavbarItem>
+            <MDBNavbarItem style={{display: usuario.user.admin ? 'block' : 'none'}} >
               <MDBNavbarLink tag={Link} to='professors'>Professors</MDBNavbarLink>
             </MDBNavbarItem>
-            <MDBNavbarItem>
+            <MDBNavbarItem style={{display: usuario.user.admin ? 'block' : 'none'}}>
               <MDBNavbarLink tag={Link} to='jugdes'>Jugdes</MDBNavbarLink>
             </MDBNavbarItem>
             <MDBNavbarItem>
@@ -66,7 +65,7 @@ export const NavbarApp = () => {
             </div>
           <MDBBtn color='primary' onClick={handleMyProfile} className='d-flex flex-row'>
             <div className='d-flex flex-row'>
-             <img src={usuario.user.img_url || ''} alt="" style={{height: '2.5em'}} />
+             <img src={usuario.user.img_url || 'assets/img/Profile.svg'} alt="" style={{height: '2.5em'}} />
             </div>
           </MDBBtn>
           <MDBBtn color='primary' onClick={logoutApp}><TbLogout size={20}/></MDBBtn>

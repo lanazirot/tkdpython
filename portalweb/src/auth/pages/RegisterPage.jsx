@@ -1,55 +1,70 @@
 import React from "react";
 import { Footer } from "../../ui/components/Footer";
-import { MDBCol, MDBInput, MDBBtn, MDBCardImage, MDBContainer } from "mdb-react-ui-kit";
+import {
+  MDBCol,
+  MDBInput,
+  MDBBtn,
+  MDBCardImage,
+  MDBContainer,
+} from "mdb-react-ui-kit";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import { userSchema } from "../../account/helpers/userMock";
 import { register } from "../../slices";
 
-
 import "animate.css";
 import "./login.css";
 import "./styles.css";
 import { Spinner } from "../../ui/components/Spinner";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useState } from "react";
 
 export const RegisterPage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { message } = useSelector((state) => state.message);
+  const { loading } = useSelector((state) => state.loading);
 
-   const dispatch = useDispatch();
-   const navigate = useNavigate();
-   const { message } = useSelector((state) => state.message);
-   const { loading } = useSelector((state) => state.loading);
+  const [imgDefault, setImgDefault] = useState('')
 
+  useEffect(() => {
+    fetch("/assets/img/ProfileB64.txt")
+      .then((response) => response.text())
+      .then((data) => {
+        setImgDefault(data);
+      });
+  }, []);
 
   const formikRegister = useFormik({
-    initialValues: userSchema.getDefaultFromShape(),
+    initialValues: {...userSchema.getDefaultFromShape(), img_url: imgDefault},
     onSubmit: async (values) => {
       dispatch(register(values))
-      .unwrap()
-      .then(() => {
-        Swal.fire({
-          title: "Success",
-          text: "User registered successfully",
-          icon: "success",
-          confirmButtonText: "Ok",
+        .unwrap()
+        .then(() => {
+          Swal.fire({
+            title: "Success",
+            text: "User registered successfully",
+            icon: "success",
+            confirmButtonText: "Ok",
+          });
+          navigate("/login");
+          window.location.reload();
+        })
+        .catch((e) => {
+          Swal.fire({
+            title: "Error",
+            text: `Usuario no registrado por error en el servidor ${e}`,
+            icon: "error",
+            confirmButtonText: "Ok",
+          });
         });
-        navigate("/login");
-        window.location.reload();
-      })
-      .catch(e => {
-        Swal.fire({
-          title: "Error",
-          text: `Usuario no registrado por error en el servidor ${e}`,
-          icon: "error",
-          confirmButtonText: "Ok",
-        });
-      });
     },
     enableReinitialize: true,
-    validationSchema: userSchema
+    validationSchema: userSchema,
   });
-
+  
   return (
     <>
       <MDBContainer className="animate__animated animate__fadeIn d-flex flex-column align-items-center pb-5">
@@ -102,7 +117,11 @@ export const RegisterPage = () => {
             value={formikRegister.values.name}
             onChange={formikRegister.handleChange}
           />
-          {formikRegister.errors.name  ? ( <div className="alert alert-danger">{formikRegister.errors.name} </div> ) : null}
+          {formikRegister.errors.name ? (
+            <div className="alert alert-danger">
+              {formikRegister.errors.name}{" "}
+            </div>
+          ) : null}
           <MDBInput
             label="Correo electrónico"
             size="lg"
@@ -114,7 +133,11 @@ export const RegisterPage = () => {
             value={formikRegister.values.email}
             onChange={formikRegister.handleChange}
           />
-          {formikRegister.errors.email  ? ( <div className="alert alert-danger">{formikRegister.errors.email} </div> ) : null}
+          {formikRegister.errors.email ? (
+            <div className="alert alert-danger">
+              {formikRegister.errors.email}{" "}
+            </div>
+          ) : null}
           <MDBInput
             label="Contraseña"
             placeholder="De almenos 8 caracteres de longitud y caracteres especiales"
@@ -126,8 +149,11 @@ export const RegisterPage = () => {
             value={formikRegister.values.password}
             onChange={formikRegister.handleChange}
           />
-          {formikRegister.errors.password  ? ( <div className="alert alert-danger">{formikRegister.errors.password} </div> ) : null}
-
+          {formikRegister.errors.password ? (
+            <div className="alert alert-danger">
+              {formikRegister.errors.password}{" "}
+            </div>
+          ) : null}
 
           <div className="text-center text-md-start mt-4 pt-2 d-grid gap-2">
             <MDBBtn
@@ -142,17 +168,17 @@ export const RegisterPage = () => {
           </div>
 
           {message && (
-          <MDBCol col="4" md="6" className="pt-5">
-            <div className="alert alert-danger" role="alert">
-              {message}
-            </div>
-          </MDBCol>
-        )}
-        {loading && (
-          <MDBCol col="4" md="6" className="pt-5">
+            <MDBCol col="4" md="6" className="pt-5">
+              <div className="alert alert-danger" role="alert">
+                {message}
+              </div>
+            </MDBCol>
+          )}
+          {loading && (
+            <MDBCol col="4" md="6" className="pt-5">
               <Spinner />
-          </MDBCol>
-        )}
+            </MDBCol>
+          )}
         </MDBCol>
       </MDBContainer>
       <Footer />

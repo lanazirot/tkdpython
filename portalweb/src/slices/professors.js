@@ -40,7 +40,6 @@ export const updateProfessor = (professor) => {
             const response = await professorService.updateProfesor(professor);
             dispatch(updateProfessorSuccess(response.data));
         } catch (error) {
-            console.log(error);
             const message = error.response.data || "Unknown error";
             dispatch(setMessage(message));
         }

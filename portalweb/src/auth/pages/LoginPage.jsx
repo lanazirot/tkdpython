@@ -30,7 +30,6 @@ export const LoginPage = () => {
       .unwrap()
       .then((r) => {
         const url = localStorage.getItem("lastPath") || "/home";
-        console.log(r);
         navigate(url);
         window.location.reload();
       })

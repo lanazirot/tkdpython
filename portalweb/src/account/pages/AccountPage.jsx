@@ -14,7 +14,7 @@ export const AccountPage = () => {
     <MDBRow className='animate__animated animate__fadeIn row-cols-1 row-cols-md-2 g-5 mt-5 justify-content-center'>
     <MDBCol className='d-flex flex-column'>
     <MDBCard alignment='center' className='mt-5 h-100 align-items-center'>
-        <MDBCardImage style={{width: '15em'}} src={user.img_url || 'img/Profile.svg'} position="top" className='mt-5'/>
+        <MDBCardImage style={{width: '15em'}} src={user.img_url || 'assets/img/Profile.svg'} position="top" className='mt-5'/>
       <MDBCardBody>
         <MDBCardTitle>{user.name}</MDBCardTitle>
         <MDBCardText>
