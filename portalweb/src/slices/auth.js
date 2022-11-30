@@ -7,12 +7,13 @@ import authService from "../services/login.service";
 
 const user = JSON.parse(localStorage.getItem("user"));
 
+
 export const login = createAsyncThunk(
   "auth/login",
   async ({ email, password }, thunkAPI) => {
     try {
       const data = await authService.login(email, password);
-      return { user: data };
+      return data;
     } catch (error) {
       const message = error.response.data || "Unknown error";
       thunkAPI.dispatch(setMessage(message));
@@ -27,14 +28,13 @@ export const register = createAsyncThunk(
     try {
       thunkAPI.dispatch(setLoading(true));
       const data = await authService.register(name, email, password, img_url);
-      console.log(data);
       thunkAPI.dispatch(setLoading(false));
-      return {user: data};
+      return {user : data};
     } catch (error) {
       thunkAPI.dispatch(setLoading(false));
       const message = error.response.data || "Unknown error";
       thunkAPI.dispatch(setMessage(message));
-      return thunkAPI.rejectWithValue();
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
@@ -45,15 +45,15 @@ export const logout = createAsyncThunk("auth/logout", async () => {
   authService.logout();
 });
 
-const initialState = user ? { isLoggedIn: true, user } : { isLoggedIn: false, user: null };
+const initialState = user ? { isLoggedIn: true, user} : { isLoggedIn: false, user: null};
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   extraReducers: {
-    [login.fulfilled]: (state, action) => {
+    [login.fulfilled]: (state, {payload}) => {
       state.isLoggedIn = true;
-      state.user = action.payload.user;
+      state.user = payload.current_user;
     },
     [login.rejected]: (state, action) => {
       state.isLoggedIn = false;

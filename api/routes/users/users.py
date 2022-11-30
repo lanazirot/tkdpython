@@ -33,7 +33,7 @@ def login():
             # Generate a token
             token = user.generate_token(user.uuid)
             session['token'] = token
-            return make_response(jsonify({'token': token, 'logged_in': True}), 200)
+            return make_response(jsonify({'token': token, 'logged_in': True, 'current_user': user}), 200)
     return make_response('Could not verify login', 401, {'WWW-Authenticate': 'Basic realm="Failed login"'})
 
 @usersapp.route('/register', methods=['POST'])
@@ -66,3 +66,14 @@ def delete_user(current_user, id):
     if user.img_url:
         cloudinary.uploader.destroy(user.img_url)
     return make_response(jsonify({'message': 'User deleted'}), 200)
+
+@usersapp.route('/profile', methods=['GET'])
+@authentication
+def get_profile(current_user, uuid):
+    # Check if current user is the same as the user in the url
+    if current_user.uuid != uuid:
+        return make_response(jsonify({'message': 'Not authorized to view this profile'}), 401)
+    user = User.query.get(uuid = uuid)
+    if not user:
+        return make_response(jsonify({'message': 'User not found'}), 404)
+    return make_response(jsonify({'user': user}), 200)

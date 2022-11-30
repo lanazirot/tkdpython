@@ -28,10 +28,11 @@ export const LoginPage = () => {
     dispatch(clearMessage());
     dispatch(login({ email, password }))
       .unwrap()
-      .then(() => {
+      .then((r) => {
         const url = localStorage.getItem("lastPath") || "/home";
-        navigate(url);
-        window.location.reload();
+        console.log(r);
+        //navigate(url);
+       // window.location.reload();
       })
       .catch(() => {
         setLoading(false);

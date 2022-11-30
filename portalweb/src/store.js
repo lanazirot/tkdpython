@@ -1,19 +1,32 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import authReducer from "./slices/auth";
 import messageReducer from "./slices/messages";
 import professorsReducer from "./slices/professors";
 import loadingReducer from "./slices/loading";
 
-const reducer = {
+import thunk from 'redux-thunk';
+import storage from 'redux-persist/lib/storage';
+import { persistReducer, persistStore } from 'redux-persist';
+
+
+const persistConfig = {
+  key: 'root',
+  storage,
+}
+
+const rootReducer = combineReducers( {
   auth: authReducer,
   message: messageReducer,
   professor: professorsReducer,
-  loading: loadingReducer,
-}
+  loading: loadingReducer
+});
 
-const store = configureStore({
-  reducer: reducer,
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
+export const store = configureStore({
+  reducer: persistedReducer,
   devTools: true,
+  middleware: [thunk],
 })
 
-export default store;
+export const persistor = persistStore(store);
