@@ -19,6 +19,23 @@ export const login = createAsyncThunk(
   }
 );
 
+export const register = createAsyncThunk(
+  "auth/register",
+  async ({ name, email, password, img_url }, thunkAPI) => {
+    try {
+      const data = await authService.register(name, email, password, img_url);
+      console.log(data);
+      return { user: data };
+    } catch (error) {
+      const message = error.response.data || "Unknown error";
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue();
+    }
+  }
+);
+
+
+
 export const logout = createAsyncThunk("auth/logout", async () => {
   authService.logout();
 });
@@ -41,6 +58,12 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       state.user = null;
     },
+    [register.fulfilled]: (state, action) => {
+      state.isLoggedIn = true;
+    },
+    [register.rejected]: (state, action) => {
+      state.isLoggedIn = false;
+    }
   },
 });
 

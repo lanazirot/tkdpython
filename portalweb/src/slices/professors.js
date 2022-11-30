@@ -113,7 +113,6 @@ const professorsSlice = createSlice({
         createProfessorSuccess: (state, {
             payload
         }) => {
-            state.professors.push(payload);
             state.loading = false;
             state.hasErrors = false;
         },

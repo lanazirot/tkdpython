@@ -3,7 +3,7 @@ import { MDBCard, MDBCardImage, MDBCardBody, MDBCardTitle, MDBCardText, MDBCol }
 import { useNavigate } from "react-router-dom";
 import './styles.css'
 
-export const Professor = ({item}) => {
+export const Professor = ({item, ...props}) => {
   const navigate = useNavigate();
   //Handle event to navigate and edit professor
   const handleEdit = () => {

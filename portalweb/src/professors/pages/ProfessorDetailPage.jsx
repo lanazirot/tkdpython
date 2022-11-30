@@ -2,23 +2,15 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import MoonLoader from "react-spinners/MoonLoader";
 import { getProfessorById, updateProfessor, deleteProfessor } from "../../slices/professors";
-import {
-  MDBBtn,
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBCard,
-  MDBCardBody,
-  MDBInput,
-  MDBFile,
-} from "mdb-react-ui-kit";
+import { MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput,MDBFile } from "mdb-react-ui-kit";
 import { useFormik } from "formik";
 import { professorSchema } from "../helpers/professorMock";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { useNavigate } from "react-router-dom";
+import 'animate.css';
+import { Spinner } from "../../ui/components/Spinner";
 
 const modal = withReactContent(Swal)
 
@@ -26,9 +18,7 @@ export const ProfessorDetailPage = () => {
   //Create an empty object from professorSchema
   const { professorId } = useParams();
   const dispatch = useDispatch();
-  const { loading, hasErrors, professor } = useSelector(
-    (state) => state.professor
-  );
+  const { loading, hasErrors, professor } = useSelector( (state) => state.professor );
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -82,11 +72,11 @@ export const ProfessorDetailPage = () => {
 
   return (
     <>
-      {loading && <MoonLoader />}
+      <Spinner loading={loading} />
       {hasErrors && <div>Unable to display professor.</div>}
       {professor && !loading && (
-          <MDBContainer fluid>
-            <MDBRow className="d-flex justify-content-center align-items-center">
+          <MDBContainer fluid className="animate__animated animate__fadeInDown">
+            <MDBRow className="d-flex justify-content-center align-items-center mt-5">
               <MDBCol lg="9" className="my-5">
                 <MDBCard>
                   <MDBCardBody className="px-4">

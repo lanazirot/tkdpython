@@ -18,6 +18,7 @@ class User(db.Model):
     registered_on: datetime.datetime
     updated_at: datetime.datetime
     role: str
+    img_url: str
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     uuid = db.Column(db.String(255), nullable=False, unique=True)
@@ -25,16 +26,18 @@ class User(db.Model):
     email = db.Column(db.String(255), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
+    img_url = db.Column(db.String(1000), nullable=True)
     registered_on = db.Column(
         db.DateTime, nullable=False, default=datetime.datetime.utcnow())
     updated_at = db.Column(
         db.DateTime, default=datetime.datetime.utcnow(), onupdate=datetime.datetime.utcnow())
     role = db.Column(db.String(50), nullable=False, default='NA')
 
-    def __init__(self, name, email, password, admin=False) -> None:
+    def __init__(self, name, email, password, img_url = '', admin=False) -> None:
         self.email = email
         self.name = name
         self.admin = admin
+        self.img_url = img_url
         self.password = bcrypt.generate_password_hash(
             password, DBConfig.BCRYPT_LOG_ROUNDS).decode('utf-8')
         self.uuid = str(uuid.uuid4())

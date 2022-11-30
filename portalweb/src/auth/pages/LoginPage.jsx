@@ -1,22 +1,22 @@
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBContainer,
   MDBCol,
   MDBRow,
   MDBBtn,
-  MDBIcon,
   MDBInput,
 } from "mdb-react-ui-kit";
 import "./styles.css";
 import { useEffect, useState } from "react";
 import { clearMessage, login } from "../../slices";
+import { Spinner } from "../../ui/components/Spinner";
+import { Footer } from "../../ui/components/Footer";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const { isLoggedIn } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
 
   const dispatch = useDispatch();
@@ -32,6 +32,8 @@ export const LoginPage = () => {
     const { email, password } = formLogin;
     setLoading(true);
 
+    dispatch(clearMessage());
+
     dispatch(login({ email, password }))
       .unwrap()
       .then(() => {
@@ -44,14 +46,11 @@ export const LoginPage = () => {
       });
   };
 
-  if (isLoggedIn) {
-    return <Navigate to="/home" />;
-  }
-
   return (
+    <>
     <MDBContainer
       fluid
-      className="p-3 my-5 h-custom d-flex align-items-center justify-content-center text-center"
+      className="animate__animated animate__fadeIn p-3 my-5 h-custom d-flex align-items-center justify-content-center text-center"
     >
       <MDBRow className="row d-flex justify-content-center flex-column align-content-center">
         <MDBCol col="10" md="6" className="pb-5">
@@ -69,9 +68,7 @@ export const LoginPage = () => {
             label="Email address"
             required
             id="email"
-            onChange={(e) =>
-              setForm({ ...formLogin, email: e.target.value })
-            }
+            onChange={(e) => setForm({ ...formLogin, email: e.target.value })}
             type="email"
             size="lg"
           />
@@ -96,10 +93,13 @@ export const LoginPage = () => {
               onClick={handleLogin}
             >
               Login
-              {loading && (
-                <span className="spinner-border spinner-border-sm"></span>
-              )}
             </MDBBtn>
+          </div>
+
+          <div className="text-center  mt-4 d-grid gap-2">
+            <p>
+              ¿No tienes una cuenta? <a href="/register">Registrarse</a>
+            </p>
           </div>
         </MDBCol>
         {message && (
@@ -110,42 +110,9 @@ export const LoginPage = () => {
           </MDBCol>
         )}
       </MDBRow>
-
-      <div className="footer fixed-bottom d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
-        <div className="text-white mb-3 mb-md-0">
-          Copyright © 2022. All rights reserved. World Taekwondo Federation
-        </div>
-
-        <div>
-          <MDBBtn
-            tag="a"
-            color="none"
-            className="mx-3"
-            style={{ color: "white" }}
-            href="https://facebook.com/lanaxzirot"
-          >
-            <MDBIcon fab icon="facebook-f" size="md" />
-          </MDBBtn>
-          <MDBBtn
-            tag="a"
-            color="none"
-            className="mx-3"
-            style={{ color: "white" }}
-            href="https://twitter.com/lanazirot"
-          >
-            <MDBIcon fab icon="twitter" size="md" />
-          </MDBBtn>
-          <MDBBtn
-            tag="a"
-            color="none"
-            className="mx-3"
-            style={{ color: "white" }}
-            href="http://www.worldtaekwondo.org/"
-          >
-            <MDBIcon icon="globe" size="md" />
-          </MDBBtn>
-        </div>
-      </div>
+      <Spinner loading={loading} />
     </MDBContainer>
+      <Footer />
+      </>
   );
 };

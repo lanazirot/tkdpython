@@ -59,3 +59,12 @@ def update_professor(current_user, id):
     professor.userModel.name = data['userModel']['name']
     db.session.commit()
     return make_response(jsonify({'data': professor}, 200))
+
+@professorsapp.route('/professors/<int:id>/students', methods=['GET'])
+@authentication
+@admin_role
+def getEstudiantes_profesor(current_user, id):
+    professor = Professor.query.get(id)
+    if not professor:
+        return make_response(jsonify({'message': 'Professor not found'}), 404)
+    return make_response(jsonify({'data': professor.students}, 200))
