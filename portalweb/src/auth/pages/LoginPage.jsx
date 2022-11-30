@@ -31,8 +31,8 @@ export const LoginPage = () => {
       .then((r) => {
         const url = localStorage.getItem("lastPath") || "/home";
         console.log(r);
-        //navigate(url);
-       // window.location.reload();
+        navigate(url);
+        window.location.reload();
       })
       .catch(() => {
         setLoading(false);

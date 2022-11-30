@@ -10,14 +10,21 @@ export const NavbarApp = () => {
 
   const [showNavText, setShowNavText] = useState(false);
 
+  const usuario = useSelector(state => state.auth);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const handleMyProfile = () => {
+    navigate("/account");
+  };
 
   const logoutApp = () => {
     dispatch(logout());
     navigate("/login");
   };
+
+  console.log(usuario);
 
   return (
     <MDBNavbar expand="lg" fixed='top' dark bgColor="primary">
@@ -54,6 +61,14 @@ export const NavbarApp = () => {
               <MDBNavbarLink tag={Link} to='personal'>Personal</MDBNavbarLink>
             </MDBNavbarItem>
           </MDBNavbarNav>
+          <div className='text-white'>
+             <p style={{display: 'inline', overflow: 'hidden', whiteSpace: 'nowrap', marginRight: '0.5em'}} >{usuario.user.name}</p>
+            </div>
+          <MDBBtn color='primary' onClick={handleMyProfile} className='d-flex flex-row'>
+            <div className='d-flex flex-row'>
+             <img src={usuario.user.img_url || ''} alt="" style={{height: '2.5em'}} />
+            </div>
+          </MDBBtn>
           <MDBBtn color='primary' onClick={logoutApp}><TbLogout size={20}/></MDBBtn>
         </MDBCollapse>
       </MDBContainer>
