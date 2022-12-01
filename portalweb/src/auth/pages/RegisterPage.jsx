@@ -16,7 +16,7 @@ import { register } from "../../slices";
 import "animate.css";
 import "./login.css";
 import "./styles.css";
-import { Spinner } from "../../ui/components/Spinner";
+import { SpinnerLoading } from "../../ui/components/Spinner";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -160,7 +160,6 @@ export const RegisterPage = () => {
               className="mb-0 px-5 mr-5"
               size="lg"
               rounded
-              disabled={loading}
               onClick={formikRegister.handleSubmit}
             >
               Registrarse

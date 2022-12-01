@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response
 from models.professor import Professor
+from models.user import User
 from app import db
 from auth.auth import authentication, admin_role
 
@@ -26,7 +27,10 @@ def get_professor(current_user, id):
 @authentication
 def create_professor(current_user):
     data = request.get_json()
-    professor = Professor(age=data['age'], uuid=data['user_uuid'], belt=data['belt_color'])
+    # Search for the user
+    user: User = User.query.filter_by(uuid=data['userModel']['uuid']).first()
+    user.role = 'P'
+    professor = Professor(age=data['age'], belt=data['belt_color'], userModel = user)
     db.session.add(professor)
     db.session.commit()
     return make_response(jsonify({'data': professor}, 200))

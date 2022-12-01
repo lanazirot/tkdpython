@@ -11,14 +11,15 @@ import {
 } from 'mdb-react-ui-kit'
 import { useDispatch, useSelector } from 'react-redux'
 import { QRCodeSVG } from 'qrcode.react'
-import { TbPrinter, TbTrash } from 'react-icons/tb'
+import { TbPrinter } from 'react-icons/tb'
 import axiosInstance from '../../axios'
 import { saveAs } from 'file-saver'
 import Swal from 'sweetalert2'
 import { updateState } from '../../slices'
+import { ROL_MAP } from '../../constants'
+
 
 import './styles.css'
-
 export const AccountPage = () => {
   //Get current user from store
   const { user } = useSelector(state => state.auth)
@@ -101,7 +102,7 @@ export const AccountPage = () => {
           <MDBCardBody>
             <MDBCardTitle>{user.name}</MDBCardTitle>
             <MDBCardText>Correo electrónico {user.email}</MDBCardText>
-            <MDBCardText>Rol dentro del dojang {user.role}</MDBCardText>
+            <MDBCardText>Rol dentro del dojang {ROL_MAP[user.role]}</MDBCardText>
             <MDBCardText>
               <QRCodeSVG value={user.uuid} />
             </MDBCardText>
@@ -112,9 +113,9 @@ export const AccountPage = () => {
               >
                 Imprime mi tarjeta de Taekwondo <TbPrinter size={20} />
               </MDBBtn>
-              <MDBBtn className='btn-danger'>
+              {/* <MDBBtn className='btn-danger'>
                 Dar de baja mi cuenta <TbTrash size={20} />
-              </MDBBtn>
+              </MDBBtn> */}
             </div>
           </MDBCardBody>
         </MDBCard>

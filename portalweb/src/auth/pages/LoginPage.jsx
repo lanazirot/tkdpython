@@ -8,9 +8,9 @@ import {
   MDBInput,
 } from "mdb-react-ui-kit";
 import "./styles.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { clearMessage, login } from "../../slices";
-import { Spinner } from "../../ui/components/Spinner";
+import { SpinnerLoading } from "../../ui/components/Spinner";
 import { Footer } from "../../ui/components/Footer";
 
 export const LoginPage = () => {

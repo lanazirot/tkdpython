@@ -27,6 +27,7 @@
     "react-pdf": "^6.2.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.4.3",
+    "react-search-box": "^2.3.0",
     "react-spinners": "^0.13.6",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.2",

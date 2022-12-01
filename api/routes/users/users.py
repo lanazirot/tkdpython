@@ -101,7 +101,6 @@ def get_profile_card(current_user):
         "margin-right": "1.0cm",
         "margin-bottom": "1.0cm",
         "margin-left": "1.0cm",
-        "background": None,
         "encoding": "UTF-8",
         "enable-local-file-access": ""
     }
@@ -111,3 +110,32 @@ def get_profile_card(current_user):
     pdf = pdfkit.from_string(out, options=options, configuration=configuration, css= os.path.join('static', 'ProfileCard.css'))
     headers = {"Content-Disposition": "attachment;filename=TKDCard.pdf"}
     return Response(pdf, mimetype='application/pdf', headers=headers)
+
+@usersapp.route('/profile/uploadImage', methods=['PUT'])
+@authentication
+def upload_profile_image(current_user):
+    data = request.get_json()
+    user = User.query.get(current_user.id)
+    if not user:
+        return make_response(jsonify({'message': 'User not found'}), 404)
+    try:
+        oldImgUrl = user.img_url
+        # Delete old profile picture from cloudinary
+        if oldImgUrl:
+            cloudinary.uploader.destroy(oldImgUrl)
+            
+        upload_result = cloudinary.uploader.upload(data['img_url'])
+        user.img_url = upload_result['secure_url']
+        db.session.commit()
+        return make_response(jsonify({'message': 'Image uploaded', 'img_url':upload_result['secure_url']}), 200)
+    except Exception as e:
+        return make_response(jsonify({'message': 'An error occurred while uploading the image'}), 500)
+    
+@usersapp.route('/norole', methods=['GET'])
+@authentication
+@admin_role
+def get_users_with_no_role(current_user):
+    users = User.query.filter_by(role="NA").all()
+    if not users:
+        return make_response(jsonify({'message': 'No users found'}), 404)
+    return make_response(jsonify({'users': users}), 200)

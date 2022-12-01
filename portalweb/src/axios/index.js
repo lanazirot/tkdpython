@@ -9,17 +9,7 @@ export const axiosInstance = axios.create({
   headers: isAuth ? { 'x-access-tokens': JSON.parse(localStorage.getItem('user')).token || null } : null
 });
 
-// Check if request had an error
-axiosInstance.interceptors.response.use(
-  response => response,
-  error => {
-    if (error.response.status === 400 || error.response.status === 401) {
-      localStorage.removeItem('user');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  }
-);
+
 
 
 export default axiosInstance;

@@ -21,8 +21,8 @@ class Professor(db.Model):
     students = db.relationship("Student", backref='student', cascade="all,delete", lazy="dynamic")
     userModel = db.relationship("User", backref='user_professor', cascade="all,delete", passive_deletes=True)
     
-    def __init__(self, age, uuid, belt) -> None:
+    def __init__(self, age,belt, userModel) -> None:
         self.age = age
-        self.user_uuid = uuid
         self.belt_color = belt
+        self.userModel = userModel
     

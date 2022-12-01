@@ -15,7 +15,7 @@ export const Professor = ({item, ...props}) => {
     <MDBCol>
     <MDBCard className='h-100 card-hover' onClick={handleEdit}>
       <MDBCardImage
-        src='https://mdbootstrap.com/img/new/standard/city/041.webp'
+        src={item.userModel.img_url}
         alt='...'
         position='top'
       />

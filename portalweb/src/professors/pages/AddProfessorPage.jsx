@@ -1,90 +1,98 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import {
-  getProfessorById,
-  updateProfessor,
-  deleteProfessor,
-} from "../../slices/professors";
-import {
-  MDBBtn,
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBCard,
-  MDBCardBody,
-  MDBInput,
-  MDBFile,
-  MDBCardImage
-} from "mdb-react-ui-kit";
+import { MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput } from "mdb-react-ui-kit";
 import { useFormik } from "formik";
 import { professorSchema } from "../helpers/professorMock";
 import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 import { useNavigate } from "react-router-dom";
 import "animate.css";
-import { Spinner } from "../../ui/components/Spinner";
-const modal = withReactContent(Swal);
+import { UserList } from "../../account/components/UserList";
+import { addProfessor } from "../../slices/professors";
+import Spinner from "react-bootstrap/Spinner";
 
 export const AddProfessorPage = () => {
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { selectedProfessor, loading, hasErrors } = useSelector(
+    (state) => state.professor
+  );
 
   const formik = useFormik({
     initialValues: professorSchema.getDefaultFromShape(),
+    validationSchema: professorSchema,
     onSubmit: async (values) => {
+      values.userModel = selectedProfessor;
+      dispatch(addProfessor(values));
+      console.log(hasErrors);
+      if (!hasErrors) {
+        Swal.fire({
+          title: "Profesor agregado exitosamente",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+          willClose: () => {
+            navigate("/professors");
+          },
+        });
+      } else {
+        Swal.fire({
+          title: "Error al agregar profesor",
+          icon: "error",
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+          willClose: () => {
+            navigate("/professors");
+          },
+        });
+      }
     },
     enableReinitialize: true,
   });
+
   return (
     <>
       <MDBContainer fluid className="animate__animated animate__fadeInDown">
         <MDBRow className="d-flex justify-content-center align-items-center mt-5">
           <MDBCol lg="9" className="my-5">
+            <UserList />
             <MDBCard>
               <MDBCardBody className="px-4">
                 <MDBRow className="align-items-center pt-4 pb-3">
                   <MDBCol md="3" className="ps-5">
-                    <h6 className="mb-1">Nombre del profesor</h6>
+                    <h6 className="mb-0">Profesor seleccionado</h6>
                   </MDBCol>
+
                   <MDBCol md="9" className="pe-5">
                     <MDBInput
-                      label="Nombre"
+                      label="Profesor"
                       size="lg"
-                      id="userModel.name"
-                      name="userModel.name"
+                      id="userModel"
+                      name="userModel"
                       type="text"
-                      required
-                      value={formik.values.userModel.name}
-                      onChange={formik.handleChange}
+                      value={
+                        selectedProfessor
+                          ? `${selectedProfessor.name} - ${selectedProfessor.email}`
+                          : ""
+                      }
+                      readOnly
                     />
+                    {selectedProfessor == null ? (
+                      <div className="alert alert-danger mt-2">
+                        Debe seleccionar un profesor
+                      </div>
+                    ) : null}
                   </MDBCol>
                 </MDBRow>
 
                 <hr className="mx-n3" />
-
-                <MDBRow className="align-items-center pt-4 pb-3">
-                  <MDBCol md="3" className="ps-5">
-                    <h6 className="mb-0">Correo electrónico</h6>
-                  </MDBCol>
-
-                  <MDBCol md="9" className="pe-5">
-                    <MDBInput
-                      label="example@example.com"
-                      size="lg"
-                      id="userModel.email"
-                      name="userModel.email"
-                      type="email"
-                      value={formik.values.userModel.email}
-                      onChange={formik.handleChange}
-                    />
-                  </MDBCol>
-                </MDBRow>
-
-                <hr className="mx-n3" />
-
                 <MDBRow className="align-items-center pt-4 pb-3">
                   <MDBCol md="3" className="ps-5">
                     <h6 className="mb-0">Cinta</h6>
@@ -100,6 +108,11 @@ export const AddProfessorPage = () => {
                       value={formik.values.belt_color}
                       onChange={formik.handleChange}
                     />
+                    {formik.errors.belt_color ? (
+                      <div className="alert alert-danger mt-2">
+                        Ingresa un color de cinta válido
+                      </div>
+                    ) : null}
                   </MDBCol>
                 </MDBRow>
 
@@ -116,25 +129,17 @@ export const AddProfessorPage = () => {
                       size="lg"
                       id="age"
                       name="age"
+                      min={18}
+                      max={120}
                       type="number"
                       value={formik.values.age}
                       onChange={formik.handleChange}
                     />
-                  </MDBCol>
-                </MDBRow>
-
-                <hr className="mx-n3" />
-
-                <MDBRow className="align-items-center pt-4 pb-3">
-                  <MDBCol md="3" className="ps-5">
-                    <h6 className="mb-0">Fotografía</h6>
-                  </MDBCol>
-
-                  <MDBCol md="9" className="pe-5">
-                    <MDBFile size="lg" id="fotografiaNueva" />
-                    <div className="small text-muted mt-2">
-                      Sube una fotografía de menos de 5mb de peso
-                    </div>
+                    {formik.errors.age ? (
+                      <div className="alert alert-danger mt-2">
+                        Ingresa una edad válida
+                      </div>
+                    ) : null}
                   </MDBCol>
                 </MDBRow>
 
@@ -145,8 +150,20 @@ export const AddProfessorPage = () => {
                     className="my-4"
                     size="lg"
                     rounded
+                    disabled={loading}
                     onClick={formik.handleSubmit}
                   >
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      style={{
+                        display: loading ? "inline-block" : "none",
+                        marginRight: "5px",
+                      }}
+                      aria-hidden="true"
+                    />
                     Guardar cambios
                   </MDBBtn>
                 </MDBCol>
