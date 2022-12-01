@@ -14,7 +14,7 @@ class Student(db.Model):
     professor_id: int
     next_belt_change: datetime.datetime
     userModel: User
-
+    professorModel: object
 
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -26,7 +26,7 @@ class Student(db.Model):
     next_belt_change = db.Column(db.DateTime, nullable=True)
     
     userModel = db.relationship("User", backref='user_student', cascade="all,delete")
-    professorModel = db.relationship("Professor", backref='profesor', cascade="all,delete")
+    professorModel = db.relationship("Professor", backref='professor_student', cascade="all,delete")
     
     def __init__(self, age,belt, weight, userModel) -> None:
         self.age = age

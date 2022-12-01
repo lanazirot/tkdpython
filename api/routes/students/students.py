@@ -12,7 +12,7 @@ studentsapp = Blueprint('students', __name__, template_folder='templates')
 @authentication
 def get_students(current_user):
     students = Student.query.all()
-    return jsonify({'data': students}), 200
+    return make_response(jsonify({'data': students}), 200)
 
 # Route to get details of a professor
 @studentsapp.route('/students/<int:id>', methods=['GET'])
@@ -29,12 +29,19 @@ def get_student(current_user, id):
 def create_student(current_user):
     data = request.get_json()
     # Search for the user
-    user: User = User.query.filter_by(uuid=data['userModel']['uuid']).first()
-    user.role = 'E'
+    user: User = User.query.filter_by(uuid=data['uuid']).first()
+    print(data)
+    if not user:
+        return make_response(jsonify({'message': 'Cant create student because of user UUID not found'}), 400)
+    
+    if user.role != 'NA':
+        return make_response(jsonify({'message': 'Cant create student because of user role'}), 400)
+    
+    user.role = 'S'
     student = Student(age=data['age'], belt=data['belt_color'], userModel = user, weight=data['weight'])
     
     # Search professor
-    professor: Professor = Professor.query.filter_by(uuid=data['userModel']['professor_id']).first()
+    professor: Professor = Professor.query.filter_by(user_uuid=data['professorModel']['uuid']).first()
     if not professor:
         return jsonify({'message': 'Professor not found'}), 404
     

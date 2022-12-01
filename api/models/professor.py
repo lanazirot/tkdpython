@@ -2,6 +2,7 @@ from database import db
 from models.user import User
 from models.student import Student
 from dataclasses import dataclass
+from typing import List
 @dataclass
 class Professor(db.Model):
     __tablename__ = "professors"
@@ -11,6 +12,7 @@ class Professor(db.Model):
     belt_color: str
     age: int
     userModel: User
+
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_uuid = db.Column(db.String(255), db.ForeignKey('users.uuid', ondelete='CASCADE'))

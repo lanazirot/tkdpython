@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response
 from models.professor import Professor
+from models.student import Student
 from models.user import User
 from app import db
 from auth.auth import authentication, admin_role
@@ -68,10 +69,11 @@ def update_professor(current_user, id):
 @authentication
 @admin_role
 def getEstudiantes_profesor(current_user, id):
-    professor: Professor = Professor.query.get(id)
+    professor: Professor = Professor.query.filter_by(id=id).first()
+    students = Student.query.filter_by(professor_id=professor.id).all()
     if not professor:
         return make_response(jsonify({'message': 'Professor not found'}), 404)
-    return make_response(jsonify({'data': professor.students}, 200))
+    return  jsonify({'data': students}), 200
 
 
 @professorsapp.route('/professors/norole', methods=['GET'])
