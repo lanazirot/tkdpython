@@ -11,3 +11,4 @@ SQLALCHEMY_TRACK_MODIFICATIONS = false
 CLOUD_NAME= "dueuuevux"
 API_KEY= "946583336564472"
 API_SECRET= "3SiMZz9gA9DJU1AGLvmuTV57ICg"
+WKHTMLTOPDF_PATH = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"

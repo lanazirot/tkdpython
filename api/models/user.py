@@ -46,4 +46,4 @@ class User(db.Model):
         return bcrypt.check_password_hash(self.password, password)
 
     def generate_token(self,uuid):
-        return jwt.encode({'uuid': uuid, 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, minutes=2, hours=0), 'iat': datetime.datetime.utcnow()}, DBConfig.SECRET_KEY, algorithm='HS256')
+        return jwt.encode({'uuid': uuid, 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, minutes=50, hours=12), 'iat': datetime.datetime.utcnow()}, DBConfig.SECRET_KEY, algorithm='HS256')
