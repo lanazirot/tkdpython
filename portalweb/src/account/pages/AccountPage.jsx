@@ -9,41 +9,94 @@ import {
   MDBCol,
   MDBRow
 } from 'mdb-react-ui-kit'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { QRCodeSVG } from 'qrcode.react'
 import { TbPrinter, TbTrash } from 'react-icons/tb'
 import axiosInstance from '../../axios'
 import { saveAs } from 'file-saver'
+import Swal from 'sweetalert2'
+import { updateState } from '../../slices'
+
+import './styles.css'
 
 export const AccountPage = () => {
   //Get current user from store
   const { user } = useSelector(state => state.auth)
+  const { loading } = useSelector(state => state.loading)
 
+  const dispatch = useDispatch()
   const handleGenerateMyCardPDF = () => {
     //Download from server
-    axiosInstance.get('/profile/generateMyCardPDF', {
-      responseType: 'blob'
-    }).then(res => {
-      const blob = new Blob([res.data], { type: 'application/pdf' })
-      saveAs(blob, `${user.name}-TKD-Card.pdf`)
-    }).catch(err => {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: err.response.data.message
+    axiosInstance
+      .get('/profile/generateMyCardPDF', {
+        responseType: 'blob'
       })
-    });
+      .then(res => {
+        const blob = new Blob([res.data], { type: 'application/pdf' })
+        saveAs(blob, `${user.name}-TKD-Card.pdf`)
+      })
+      .catch(err => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Error al generar la tarjeta'
+        })
+      })
   }
-
   return (
     <MDBRow className='animate__animated animate__fadeIn row-cols-1 row-cols-md-2 g-5 mt-5 justify-content-center'>
       <MDBCol className='d-flex flex-column'>
         <MDBCard alignment='center' className='mt-5 h-100 align-items-center'>
           <MDBCardImage
-            style={{ width: '15em' }}
+            className="mt-5 image-cropper"
             src={user.img_url || 'assets/img/Profile.svg'}
             position='top'
-            className='mt-5'
+            onClick={() => {
+              //Swal to upload image
+              Swal.fire({
+                title: 'Subir imagen',
+                input: 'file',
+                inputAttributes: {
+                  accept: 'image/*',
+                  'aria-label': 'Subir imagen'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Subir',
+                showLoaderOnConfirm: true,
+                preConfirm: file => {
+                  try {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = () => {
+                      //Upload image to server
+                      axiosInstance
+                        .put('/profile/uploadImage', {
+                          img_url: reader.result
+                        })
+                        .then(res => {
+                          dispatch(updateState({
+                            ...user,
+                            img_url: res.data.img_url
+                          }))
+                          if(loading){
+                            Swal.showLoading()
+                          }
+                          Swal.fire({
+                            icon: 'success',
+                            title: 'Imagen subida correctamente',
+                            showConfirmButton: false,
+                            timer: 1500
+                          })
+                        })
+                      }
+                  } catch (err) {
+                    Swal.showValidationMessage(
+                      `Request failed: ${err}`
+                    )
+                  }
+                }
+              })
+            }}
           />
           <MDBCardBody>
             <MDBCardTitle>{user.name}</MDBCardTitle>
@@ -57,10 +110,10 @@ export const AccountPage = () => {
                 className='btn-info mb-4'
                 onClick={handleGenerateMyCardPDF}
               >
-                Imprime mi tarjeta de Taekwondo <TbPrinter size={20} />{' '}
+                Imprime mi tarjeta de Taekwondo <TbPrinter size={20} />
               </MDBBtn>
               <MDBBtn className='btn-danger'>
-                Dar de baja mi cuenta <TbTrash size={20} />{' '}
+                Dar de baja mi cuenta <TbTrash size={20} />
               </MDBBtn>
             </div>
           </MDBCardBody>

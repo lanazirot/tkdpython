@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { TbLogout } from "react-icons/tb";
-import "./styles.css";
 import { logout } from "../../slices";
 import { MDBNavbar, MDBContainer, MDBNavbarBrand,MDBIcon, MDBNavbarNav, MDBNavbarItem, MDBNavbarLink, MDBNavbarToggler,MDBCollapse, MDBBtn } from "mdb-react-ui-kit";
+import './stylesNavbar.css'
 
 export const NavbarApp = () => {
 
@@ -64,8 +64,8 @@ export const NavbarApp = () => {
              <p style={{display: 'inline', overflow: 'hidden', whiteSpace: 'nowrap', marginRight: '0.5em'}} >{usuario.user.name}</p>
             </div>
           <MDBBtn color='primary' onClick={handleMyProfile} className='d-flex flex-row'>
-            <div className='d-flex flex-row'>
-             <img src={usuario.user.img_url || 'assets/img/Profile.svg'} alt="" style={{height: '2.5em'}} />
+            <div className='d-flex flex-row justify-content-center align-content-center align-self-center'>
+             <img src={usuario.user.img_url || 'assets/img/Profile.svg'} alt="" style={{height: '2.5em!important'}} className="image-cropper-navbar" />
             </div>
           </MDBBtn>
           <MDBBtn color='primary' onClick={logoutApp}><TbLogout size={20}/></MDBBtn>

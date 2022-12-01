@@ -1,7 +1,3 @@
-body {
-    font-family: Roboto, Helvetica, Arial, sans-serif;
-}
-
 .image-cropper {
     object-fit: cover;
     border-radius: 50%;

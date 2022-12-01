@@ -39,6 +39,17 @@ export const register = createAsyncThunk(
   }
 );
 
+export const updateState = state => {
+  return async (dispatch) => {
+    try {
+      dispatch(setLoading(true));
+      dispatch(updateUserState(state));
+    } catch (error) {
+      const message = error.response.data || "Unknown error";
+      dispatch(setMessage(message));
+    }
+  }
+}
 
 
 export const logout = createAsyncThunk("auth/logout", async () => {
@@ -50,6 +61,11 @@ const initialState = user ? { isLoggedIn: true, user} : { isLoggedIn: false, use
 const authSlice = createSlice({
   name: "auth",
   initialState,
+  reducers: {
+    updateUserState: (state, {payload}) => {
+      state.user = payload;
+    },
+  },
   extraReducers: {
     [login.fulfilled]: (state, {payload}) => {
       state.isLoggedIn = true;
@@ -67,11 +83,13 @@ const authSlice = createSlice({
       state.isLoggedIn = true;
       state.user = action.payload.user
     },
-    [register.rejected]: (state, action) => {
+    [register.rejected]: (state, {payload}) => {
       state.isLoggedIn = false;
-    }
+    },
   },
 });
 
 const { reducer } = authSlice;
 export default reducer;
+
+export const { updateUserState } = authSlice.actions;
