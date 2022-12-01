@@ -70,6 +70,7 @@ export const ProfessorDetailPage = () => {
     dispatch(getProfessorById(professorId));
   }, [dispatch]);
 
+  console.log(formik.errors);
 
   return (
     <>

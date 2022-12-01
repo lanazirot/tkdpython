@@ -2,7 +2,6 @@ from database import db
 from dataclasses import dataclass
 import datetime
 from models.user import User
-from models.professor import Professor
 @dataclass
 class Student(db.Model):
     __tablename__ = "students"
@@ -15,7 +14,8 @@ class Student(db.Model):
     professor_id: int
     next_belt_change: datetime.datetime
     userModel: User
-    professorModel: Professor
+
+
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_uuid = db.Column(db.String(255), db.ForeignKey('users.uuid'))
@@ -26,7 +26,7 @@ class Student(db.Model):
     next_belt_change = db.Column(db.DateTime, nullable=True)
     
     userModel = db.relationship("User", backref='user_student', cascade="all,delete")
-    professorModel = db.relationship("Professor", backref='user_professor', cascade="all,delete", passive_deletes=True)
+    professorModel = db.relationship("Professor", backref='profesor', cascade="all,delete")
     
     def __init__(self, age,belt, weight, userModel) -> None:
         self.age = age

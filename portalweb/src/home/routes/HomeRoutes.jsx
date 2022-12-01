@@ -10,6 +10,7 @@ import { ProfessorsRouter } from '../../professors/routes/ProfessorsRouter';
 import { NavbarApp } from '../../ui';
 import { Error404Page } from '../../ui/components/Error404Page';
 import { AdminRoute } from '../../router/AdminRoute';
+import { StudentRouter } from '../../students/routes/StudentRouter';
 export const AppRoutes = () => {
   return (
     <>
@@ -25,9 +26,9 @@ export const AppRoutes = () => {
                 } />
                 <Route path="account/*" element={<AccountRouter />} />
                 <Route path="personal" element={<PersonalPage />} />
-                <Route path="students" element={
+                <Route path="students/*" element={
                     <AdminRoute>
-                        <StudentsPage />
+                        <StudentRouter />
                     </AdminRoute>
                 } />
                 <Route path="account" element={<AccountPage />} />

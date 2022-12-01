@@ -1,8 +1,7 @@
 from database import db 
-from models.student import Student
 from models.user import User
+from models.student import Student
 from dataclasses import dataclass
-from typing import List
 @dataclass
 class Professor(db.Model):
     __tablename__ = "professors"

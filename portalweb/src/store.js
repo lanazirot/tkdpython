@@ -3,6 +3,7 @@ import authReducer from "./slices/auth";
 import messageReducer from "./slices/messages";
 import professorsReducer from "./slices/professors";
 import loadingReducer from "./slices/loading";
+import studentsReducer from "./slices/students";
 
 import thunk from 'redux-thunk';
 import storage from 'redux-persist/lib/storage';
@@ -21,7 +22,8 @@ const rootReducer = combineReducers( {
   auth: authReducer,
   message: messageReducer,
   professor: professorsReducer,
-  loading: loadingReducer
+  loading: loadingReducer,
+  student: studentsReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

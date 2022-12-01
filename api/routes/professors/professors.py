@@ -68,7 +68,17 @@ def update_professor(current_user, id):
 @authentication
 @admin_role
 def getEstudiantes_profesor(current_user, id):
-    professor = Professor.query.get(id)
+    professor: Professor = Professor.query.get(id)
     if not professor:
         return make_response(jsonify({'message': 'Professor not found'}), 404)
     return make_response(jsonify({'data': professor.students}, 200))
+
+
+@professorsapp.route('/professors/norole', methods=['GET'])
+@authentication
+@admin_role
+def get_users_with_no_role(current_user):
+    users = Professor.query.join(User, Professor.user_uuid == User.uuid).all()
+    if not users:
+        return make_response(jsonify({'message': 'No users found'}), 404)
+    return make_response(jsonify({'users': users}), 200)

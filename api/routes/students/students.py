@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response
 from models.student import Student
 from models.user import User
+from models.professor import Professor
 from app import db
 from auth.auth import authentication, admin_role
 
@@ -31,6 +32,14 @@ def create_student(current_user):
     user: User = User.query.filter_by(uuid=data['userModel']['uuid']).first()
     user.role = 'E'
     student = Student(age=data['age'], belt=data['belt_color'], userModel = user, weight=data['weight'])
+    
+    # Search professor
+    professor: Professor = Professor.query.filter_by(uuid=data['userModel']['professor_id']).first()
+    if not professor:
+        return jsonify({'message': 'Professor not found'}), 404
+    
+    student.professorModel = professor
+
     db.session.add(student)
     db.session.commit()
     return make_response(jsonify({'data': student}, 200))
@@ -56,21 +65,18 @@ def update_student(current_user, id):
     if not student:
         return make_response(jsonify({'message': 'Student not found'}), 404)
     data = request.get_json()
+    # Search professor by id
+    professor: Professor = Professor.query.get(user_uuid=data['professorModel']['uuid'])
+    if not professor:
+        return make_response(jsonify({'message': 'Professor not found'}), 404)
     
     student.belt_color = data['belt_color']
     student.age = data['age']
     student.userModel.email = data['userModel']['email']
     student.userModel.name = data['userModel']['name']
     student.weight = data['weight']
+    student.professorModel = professor
     
     db.session.commit()
     return make_response(jsonify({'data': student}, 200))
 
-@studentsapp.route('/students/<int:id>/students', methods=['GET'])
-@authentication
-@admin_role
-def getEstudiantes_profesor(current_user, id):
-    professor = Student.query.get(id)
-    if not professor:
-        return make_response(jsonify({'message': 'Professor not found'}), 404)
-    return make_response(jsonify({'data': professor.students}, 200))

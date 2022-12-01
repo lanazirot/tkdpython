@@ -21,6 +21,8 @@ logger = logging.getLogger('alembic.env')
 # from myapp import mymodel
 from models.personal import Personal
 from models.judge import Judge
+from models.student import Student
+from models.professor import Professor
 # target_metadata = mymodel.Base.metadata
 config.set_main_option(
     'sqlalchemy.url',
