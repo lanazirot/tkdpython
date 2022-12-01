@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, session, render_template, Response
 from models.user import User
+from models.student import Student
+from models.professor import Professor
 from app import db
 from auth.auth import authentication, admin_role
 
@@ -78,6 +80,27 @@ def get_profile(current_user, uuid):
     user = User.query.get(uuid = uuid)
     if not user:
         return make_response(jsonify({'message': 'User not found'}), 404)
+    return make_response(jsonify({'user': user}), 200)
+
+@usersapp.route('/profile/getMyData', methods=['GET'])
+@authentication
+def get_profile_data(current_user):
+    user: User = User.query.filter_by(uuid = current_user.uuid).first()    
+    if not user:
+        return make_response(jsonify({'message': 'User not found'}), 404)
+    if user.admin == True:
+        return make_response(jsonify({'data': user, 'information': 'Eres administrador del sistema.'}), 200)
+    
+    if user.role == 'NA':
+        return make_response(jsonify({'information': 'Tu usuario aun no ha sido asignado.', 'data': None}), 200)
+    
+    if user.role == 'S':
+        student = Student.query.filter_by(user_uuid = current_user.uuid).first()
+        return make_response(jsonify({'data': student, 'information': 'Bienvenido a la seccion personal estudiante'}), 200)
+    elif user.role == 'P':
+        professor = Professor.query.filter_by(user_uuid = current_user.uuid).first()
+        return make_response(jsonify({'data': professor, 'information': 'Seonsaengnim-eul hwan-yeonghabnida!'}), 200)
+    
     return make_response(jsonify({'user': user}), 200)
 
 @usersapp.route('/profile/generateMyCardPDF', methods=['GET'])
